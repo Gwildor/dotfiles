@@ -1,0 +1,17 @@
+[ui]
+username = Gwildor Sok <gwildorsok@gmail.com>
+
+[diff]
+git = True
+
+[pager]
+pager = LESS='FRX' less
+
+[extensions]
+color =
+graphlog =
+pager =
+hgext.crecord=~/hgext/crecord/crecord
+
+[alias]
+show = log -pr
