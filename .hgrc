@@ -11,7 +11,8 @@ pager = LESS='FRX' less
 color =
 graphlog =
 pager =
-hgext.crecord=~/hgext/crecord/crecord
+hgext.crecord = ~/hgext/crecord/crecord
+blametrai = ~/hgext/blametrail.py
 
 [alias]
 show = log -pr
