@@ -12,6 +12,7 @@ color =
 graphlog =
 pager =
 purge =
+churn =
 hgext.crecord = ~/hgext/crecord/crecord
 blametrai = ~/hgext/blametrail.py
 
