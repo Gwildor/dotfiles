@@ -1,28 +1,35 @@
 "" Plug plugins
 " [PlugInstall] [PlugClean]
+let g:ycm_path_to_python_interpreter = '/usr/bin/python'
 call plug#begin('~/.vim/plugged')
 
 Plug 'morhetz/gruvbox'
 Plug 'bling/vim-airline'
 
 Plug 'ctrlpvim/ctrlp.vim'
-"Plug 'Valloric/YouCompleteMe', { 'do': './install.sh --clang-completer' }
+Plug 'Valloric/YouCompleteMe', { 'do': './install.sh --clang-completer' }
+
+Plug 'ntpeters/vim-better-whitespace'
+
+Plug 'hdima/python-syntax'
+Plug 'sickill/vim-monokai'
 
 call plug#end()
 
 set t_Co=256
 syntax enable
 set background=dark
-colorscheme gruvbox
+colorscheme monokai
 
 let mapleader=','
-nmap <space> :
-set autowrite
-au FocusLost * :wa
+nmap ; :
+
+" Save with ,s
+nnoremap <leader>s :update<CR>
 
 set ruler
 set number
-set tabstop=4
+set tabstop=8
 set softtabstop=4
 set shiftwidth=4
 set expandtab
@@ -37,11 +44,16 @@ set autoindent
 set smartindent
 set hidden
 set laststatus=2
+set backspace=2
+set colorcolumn=80
 
 let g:airline_theme='raven'
 let g:airline#extensions#tabline#enabled = 1
-nnoremap <C-[> :bprev<CR>
-nnoremap <C-]> :bnext<CR>
+
+nnoremap \[ :bprev<CR>
+nnoremap \] :bnext<CR>
+" Close buffer with ,c
+nnoremap <leader>c :bd<CR>
 
 autocmd BufNewFile,BufRead *.json set ft=javascript   " JS highlighting is good enough for now for JSON
 
@@ -59,11 +71,24 @@ endif
 " Move lines around
 nnoremap <leader>j :m .+1<CR>==
 nnoremap <leader>k :m .-2<CR>==
-inoremap <leader>j <Esc>:m .+1<CR>==gi
-inoremap <leader>k <Esc>:m .-2<CR>==gi
 vnoremap <leader>j :m '>+1<CR>gv=gv
 vnoremap <leader>k :m '<-2<CR>gv=gv
+
+" Reselect visual block after indent/outdent.
+vnoremap < <gv
+vnoremap > >gv
+
+" Relative line numbers
+set rnu
+nnoremap <silent><leader>l :set rnu! rnu? <cr>
+autocmd InsertEnter,FocusLost,WinLeave,CmdwinLeave * silent! :set norelativenumber
+autocmd InsertLeave,FocusGained,WinEnter,CmdwinEnter * silent! :set relativenumber
 
 set runtimepath^=~/.vim/bundle/ctrlp.vim
 let g:ctrlp_map = '<c-p>'
 let g:ctrlp_cmd = 'CtrlP'
+
+let g:ycm_autoclose_preview_window_after_completion = 1
+let g:ycm_autoclose_preview_window_after_insertion = 1
+
+let python_highlight_all = 1
