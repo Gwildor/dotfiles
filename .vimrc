@@ -14,6 +14,11 @@ Plug 'ntpeters/vim-better-whitespace'
 Plug 'hdima/python-syntax'
 Plug 'sickill/vim-monokai'
 
+Plug 'scrooloose/nerdtree'
+
+Plug 'tpope/vim-commentary'
+Plug 'airblade/vim-gitgutter'
+
 call plug#end()
 
 set t_Co=256
@@ -23,9 +28,6 @@ colorscheme monokai
 
 let mapleader=','
 nmap ; :
-
-" Save with ,s
-nnoremap <leader>s :update<CR>
 
 set ruler
 set number
@@ -47,13 +49,15 @@ set laststatus=2
 set backspace=2
 set colorcolumn=80
 
-let g:airline_theme='raven'
-let g:airline#extensions#tabline#enabled = 1
+" Save with ,s
+nnoremap <leader>s :update<CR>
 
 nnoremap \[ :bprev<CR>
 nnoremap \] :bnext<CR>
 " Close buffer with ,c
-nnoremap <leader>c :bd<CR>
+nnoremap <leader>c :bp <BAR> bd #<CR>
+
+nnoremap <leader>n :NERDTreeToggle<CR>
 
 autocmd BufNewFile,BufRead *.json set ft=javascript   " JS highlighting is good enough for now for JSON
 
@@ -83,6 +87,13 @@ set rnu
 nnoremap <silent><leader>l :set rnu! rnu? <cr>
 autocmd InsertEnter,FocusLost,WinLeave,CmdwinLeave * silent! :set norelativenumber
 autocmd InsertLeave,FocusGained,WinEnter,CmdwinEnter * silent! :set relativenumber
+
+" Fix escaping insert mode having a delay
+autocmd InsertEnter * set timeoutlen=0
+autocmd InsertLeave * set timeoutlen=1000
+
+let g:airline_theme='raven'
+let g:airline#extensions#tabline#enabled = 1
 
 set runtimepath^=~/.vim/bundle/ctrlp.vim
 let g:ctrlp_map = '<c-p>'
