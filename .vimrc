@@ -24,7 +24,8 @@ call plug#end()
 set t_Co=256
 syntax enable
 set background=dark
-colorscheme monokai
+colorscheme Tomorrow-Night-Bright
+highlight LineNr ctermfg=102  " For some reason, inactive line number is barely noticable for Tomorrow-Night-Bright
 
 let mapleader=','
 nmap ; :
@@ -48,6 +49,11 @@ set hidden
 set laststatus=2
 set backspace=2
 set colorcolumn=80
+set nostartofline       " Don't go to start of line when moving around, like switching buffers
+set nobackup
+set noswapfile
+set scrolloff=3
+set sessionoptions=buffers,curdir,help
 
 " Save with ,s
 nnoremap <leader>s :update<CR>
@@ -57,7 +63,16 @@ nnoremap \] :bnext<CR>
 " Close buffer with ,c
 nnoremap <leader>c :bp <BAR> bd #<CR>
 
+" Easier window navigation
+nmap <C-h> <C-w>h
+nmap <C-j> <C-w>j
+nmap <C-k> <C-w>k
+nmap <C-l> <C-w>l
+
 nnoremap <leader>n :NERDTreeToggle<CR>
+
+nnoremap <silent><esc> :noh<CR>
+nnoremap <esc>^[ <esc>^[
 
 autocmd BufNewFile,BufRead *.json set ft=javascript   " JS highlighting is good enough for now for JSON
 
@@ -94,6 +109,16 @@ autocmd InsertLeave * set timeoutlen=1000
 
 let g:airline_theme='raven'
 let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#buffer_idx_mode = 1
+nmap <leader>1 <Plug>AirlineSelectTab1
+nmap <leader>2 <Plug>AirlineSelectTab2
+nmap <leader>3 <Plug>AirlineSelectTab3
+nmap <leader>4 <Plug>AirlineSelectTab4
+nmap <leader>5 <Plug>AirlineSelectTab5
+nmap <leader>6 <Plug>AirlineSelectTab6
+nmap <leader>7 <Plug>AirlineSelectTab7
+nmap <leader>8 <Plug>AirlineSelectTab8
+nmap <leader>9 <Plug>AirlineSelectTab9
 
 set runtimepath^=~/.vim/bundle/ctrlp.vim
 let g:ctrlp_map = '<c-p>'
@@ -103,3 +128,5 @@ let g:ycm_autoclose_preview_window_after_completion = 1
 let g:ycm_autoclose_preview_window_after_insertion = 1
 
 let python_highlight_all = 1
+
+let NERDTreeIgnore=['^__pycache__$[[dir]]']
