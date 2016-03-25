@@ -1,18 +1,16 @@
 "" Plug plugins
 " [PlugInstall] [PlugClean]
-let g:ycm_path_to_python_interpreter = '/usr/bin/python'
 call plug#begin('~/.vim/plugged')
 
-Plug 'morhetz/gruvbox'
 Plug 'bling/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 
 Plug 'ctrlpvim/ctrlp.vim'
-Plug 'Valloric/YouCompleteMe', { 'do': './install.sh --clang-completer' }
+Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
 
 Plug 'ntpeters/vim-better-whitespace'
 
 Plug 'hdima/python-syntax'
-Plug 'sickill/vim-monokai'
 
 Plug 'scrooloose/nerdtree'
 
@@ -54,6 +52,7 @@ set nobackup
 set noswapfile
 set scrolloff=3
 set sessionoptions=buffers,curdir,help
+set mouse=
 
 " Save with ,s
 nnoremap <leader>s :update<CR>
@@ -101,7 +100,7 @@ vnoremap > >gv
 set rnu
 nnoremap <silent><leader>l :set rnu! rnu? <cr>
 autocmd InsertEnter,FocusLost,WinLeave,CmdwinLeave * silent! :set norelativenumber
-autocmd InsertLeave,FocusGained,WinEnter,CmdwinEnter * silent! :set relativenumber
+autocmd InsertLeave,FocusGained,WinEnter,BufEnter,CmdwinEnter * silent! :set relativenumber
 
 " Fix escaping insert mode having a delay
 autocmd InsertEnter * set timeoutlen=0
