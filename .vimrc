@@ -122,6 +122,7 @@ nmap <leader>9 <Plug>AirlineSelectTab9
 set runtimepath^=~/.vim/bundle/ctrlp.vim
 let g:ctrlp_map = '<c-p>'
 let g:ctrlp_cmd = 'CtrlP'
+let g:ctrlp_open_multiple_files = 'i'  " Open multiple files as buffers, not as splits
 
 let g:ycm_autoclose_preview_window_after_completion = 1
 let g:ycm_autoclose_preview_window_after_insertion = 1
