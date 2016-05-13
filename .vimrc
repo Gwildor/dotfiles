@@ -11,6 +11,7 @@ Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
 Plug 'ntpeters/vim-better-whitespace'
 
 Plug 'hdima/python-syntax'
+Plug 'hynek/vim-python-pep8-indent'
 
 Plug 'scrooloose/nerdtree'
 
