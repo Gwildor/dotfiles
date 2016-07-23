@@ -5,13 +5,19 @@ call plug#begin('~/.vim/plugged')
 Plug 'bling/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
-Plug 'ctrlpvim/ctrlp.vim'
+if executable('fzf')
+    Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+else
+    Plug 'ctrlpvim/ctrlp.vim'
+endif
 Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
 
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'scrooloose/nerdtree'
 Plug 'tpope/vim-commentary'
 Plug 'airblade/vim-gitgutter'
+Plug 'wellle/targets.vim'
+Plug 'justinmk/vim-sneak'
 
 " Language specific
 Plug 'hdima/python-syntax'
@@ -19,6 +25,7 @@ Plug 'hynek/vim-python-pep8-indent'
 Plug 'rust-lang/rust.vim'
 Plug 'elzr/vim-json'
 Plug 'mitsuhiko/vim-jinja'
+Plug 'mustache/vim-mustache-handlebars'
 
 call plug#end()
 
@@ -108,7 +115,7 @@ vnoremap > >gv
 set rnu
 nnoremap <silent><leader>l :set rnu! rnu? <cr>
 autocmd InsertEnter,FocusLost,WinLeave,CmdwinLeave * silent! :set norelativenumber
-autocmd InsertLeave,FocusGained,WinEnter,BufEnter,CmdwinEnter * silent! :set relativenumber
+autocmd InsertLeave,FocusGained,WinEnter,BufEnter,CmdwinEnter * if &ft != 'nerdtree' | silent! :set relativenumber | endif
 
 " Fix escaping insert mode having a delay
 autocmd InsertEnter * set timeoutlen=0
@@ -127,10 +134,25 @@ nmap <leader>7 <Plug>AirlineSelectTab7
 nmap <leader>8 <Plug>AirlineSelectTab8
 nmap <leader>9 <Plug>AirlineSelectTab9
 
-set runtimepath^=~/.vim/bundle/ctrlp.vim
-let g:ctrlp_map = '<c-p>'
-let g:ctrlp_cmd = 'CtrlP'
-let g:ctrlp_open_multiple_files = 'i'  " Open multiple files as buffers, not as splits
+if executable('fzf')
+    nnoremap <C-p> :FZF -m<cr>
+
+    if executable('ag')
+        let $FZF_DEFAULT_COMMAND = 'ag -l -u -g "" --ignore ".git"'
+    endif
+else
+    set runtimepath^=~/.vim/bundle/ctrlp.vim
+    let g:ctrlp_map = '<c-p>'
+    let g:ctrlp_cmd = 'CtrlP'
+    let g:ctrlp_open_multiple_files = 'i'  " Open multiple files as buffers, not as splits
+
+    " Use ag over grep
+    if executable('ag')
+        set grepprg=ag\ --nogroup\ --nocolor
+        let g:ctrlp_user_command = 'ag %s -l --nocolor -u -g "" --ignore ".git"'
+        let g:ctrlp_use_caching = 0
+    endif
+endif
 
 let g:ycm_autoclose_preview_window_after_completion = 1
 let g:ycm_autoclose_preview_window_after_insertion = 1
@@ -138,3 +160,5 @@ let g:ycm_autoclose_preview_window_after_insertion = 1
 let python_highlight_all = 1
 
 let NERDTreeIgnore=['^__pycache__$[[dir]]', '\.pyc$']
+
+let g:sneak#streak = 1
