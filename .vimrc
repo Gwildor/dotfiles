@@ -1,5 +1,6 @@
 "" Plug plugins
 " [PlugInstall] [PlugClean]
+let g:plug_window = 'enew'
 call plug#begin('~/.vim/plugged')
 
 Plug 'bling/vim-airline'
@@ -16,6 +17,7 @@ Plug 'ntpeters/vim-better-whitespace'
 Plug 'scrooloose/nerdtree'
 Plug 'tpope/vim-commentary'
 Plug 'airblade/vim-gitgutter'
+Plug 'tpope/vim-fugitive'
 Plug 'wellle/targets.vim'
 Plug 'justinmk/vim-sneak'
 
@@ -26,12 +28,12 @@ Plug 'rust-lang/rust.vim'
 Plug 'elzr/vim-json'
 Plug 'mitsuhiko/vim-jinja'
 Plug 'mustache/vim-mustache-handlebars'
+Plug 'chrisbra/csv.vim'
 
 call plug#end()
 
-set t_Co=256
+filetype plugin indent on
 syntax enable
-set background=dark
 colorscheme Tomorrow-Night-Bright
 " For some reason, inactive line number is barely noticable for Tomorrow-Night-Bright
 highlight LineNr ctermfg=102
@@ -41,7 +43,6 @@ highlight link pythonOperator pythonExClass
 
 let mapleader=','
 
-set ruler
 set number
 set tabstop=8
 set softtabstop=4
@@ -68,6 +69,9 @@ set scrolloff=3
 set sessionoptions=buffers,curdir,help
 set mouse=
 set pastetoggle=<F2>
+set display+=lastline
+set visualbell
+set t_vb=
 
 " Save with ,s
 nnoremap <leader>s :update<CR>
