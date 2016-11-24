@@ -72,6 +72,11 @@ set pastetoggle=<F2>
 set display+=lastline
 set visualbell
 set t_vb=
+set lazyredraw
+set list
+set listchars=tab:│·,trail:·,extends:»,precedes:«,nbsp:·
+let &showbreak='> '
+set nojoinspaces
 
 " Save with ,s
 nnoremap <leader>s :update<CR>
@@ -86,6 +91,8 @@ nmap <C-h> <C-w>h
 nmap <C-j> <C-w>j
 nmap <C-k> <C-w>k
 nmap <C-l> <C-w>l
+
+nnoremap Y y$
 
 nnoremap <leader>n :NERDTreeToggle<CR>
 
@@ -119,11 +126,15 @@ vnoremap > >gv
 set rnu
 nnoremap <silent><leader>l :set rnu! rnu? <cr>
 autocmd InsertEnter,FocusLost,WinLeave,CmdwinLeave * silent! :set norelativenumber
-autocmd InsertLeave,FocusGained,WinEnter,BufEnter,CmdwinEnter * if &ft != 'nerdtree' | silent! :set relativenumber | endif
+autocmd InsertLeave,FocusGained,WinEnter,BufEnter,CmdwinEnter * if &ft != 'nerdtree' && getfsize(expand("<afile>")) < 100 * 1024 * 1024 | silent! :set relativenumber | endif
 
 " Fix escaping insert mode having a delay
-autocmd InsertEnter * set timeoutlen=0
-autocmd InsertLeave * set timeoutlen=1000
+" Also disables listchars in insert mode
+autocmd InsertEnter * set timeoutlen=0 nolist
+autocmd InsertLeave * set timeoutlen=1000 list
+
+" Disable syntax for large files
+autocmd BufWinEnter * if line2byte(line('$') + 1) > 100 * 1024 * 1024 | syntax clear | setlocal nornu nonumber | let b:airline_whitespace_disabled = 1 | endif
 
 let g:airline_theme='raven'
 let g:airline#extensions#tabline#enabled = 1
@@ -142,7 +153,7 @@ if executable('fzf')
     nnoremap <C-p> :FZF -m<cr>
 
     if executable('ag')
-        let $FZF_DEFAULT_COMMAND = 'ag -l -u -g "" --ignore ".git"'
+        let $FZF_DEFAULT_COMMAND = 'ag -l --hidden -U -g "" --ignore ".git"'
     endif
 else
     set runtimepath^=~/.vim/bundle/ctrlp.vim
@@ -166,3 +177,7 @@ let python_highlight_all = 1
 let NERDTreeIgnore=['^__pycache__$[[dir]]', '\.pyc$']
 
 let g:sneak#streak = 1
+
+" Disable rechecking filetype for jinja on html write. This prevents changing
+" htmldjango to htmljinja for Django templates.
+let g:htmljinja_disable_html_upgrade = 1
