@@ -99,6 +99,15 @@ nnoremap <leader>n :NERDTreeToggle<CR>
 nnoremap <silent><esc> :noh<CR>
 nnoremap <esc>^[ <esc>^[
 
+" n is always forwards, N always backwards. Search results are always center
+" of screen.
+noremap <expr> n (v:searchforward ? 'nzz' : 'Nzz')
+noremap <expr> N (v:searchforward ? 'Nzz' : 'nzz')
+nnoremap * *zz
+nnoremap # #zz
+nnoremap g* g*zz
+nnoremap g# g#zz
+
 if $TERM_PROGRAM =~ "iTerm"
     " 0 for block, 1 for pipe, 2 for underline
     let &t_SI = "\<Esc>]50;CursorShape=1\x7"
@@ -176,7 +185,7 @@ let python_highlight_all = 1
 
 let NERDTreeIgnore=['^__pycache__$[[dir]]', '\.pyc$']
 
-let g:sneak#streak = 1
+let g:sneak#label = 1
 
 " Disable rechecking filetype for jinja on html write. This prevents changing
 " htmldjango to htmljinja for Django templates.
