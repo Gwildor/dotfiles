@@ -3,11 +3,12 @@
 let g:plug_window = 'enew'
 call plug#begin('~/.vim/plugged')
 
-Plug 'bling/vim-airline'
+Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
 if executable('fzf')
     Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+    Plug 'junegunn/fzf.vim'
 else
     Plug 'ctrlpvim/ctrlp.vim'
 endif
@@ -29,6 +30,7 @@ Plug 'elzr/vim-json'
 Plug 'mitsuhiko/vim-jinja'
 Plug 'mustache/vim-mustache-handlebars'
 Plug 'chrisbra/csv.vim'
+Plug 'kchmck/vim-coffee-script'
 
 call plug#end()
 
@@ -190,3 +192,4 @@ let g:sneak#label = 1
 " Disable rechecking filetype for jinja on html write. This prevents changing
 " htmldjango to htmljinja for Django templates.
 let g:htmljinja_disable_html_upgrade = 1
+autocmd FileType htmldjango setlocal commentstring={#\ %s\ #}
