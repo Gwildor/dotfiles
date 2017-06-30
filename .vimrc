@@ -59,7 +59,7 @@ set hlsearch            " highlight matches
 set ignorecase
 set smartcase
 set autoindent
-set smartindent
+set cindent
 set hidden
 set laststatus=2
 set backspace=2
