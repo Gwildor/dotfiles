@@ -6,12 +6,8 @@ call plug#begin('~/.vim/plugged')
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
-if executable('fzf')
-    Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-    Plug 'junegunn/fzf.vim'
-else
-    Plug 'ctrlpvim/ctrlp.vim'
-endif
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
 Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
 
 Plug 'ntpeters/vim-better-whitespace'
@@ -23,7 +19,7 @@ Plug 'wellle/targets.vim'
 Plug 'justinmk/vim-sneak'
 
 " Language specific
-Plug 'hdima/python-syntax'
+Plug 'vim-python/python-syntax'
 Plug 'hynek/vim-python-pep8-indent'
 Plug 'rust-lang/rust.vim'
 Plug 'elzr/vim-json'
@@ -31,6 +27,7 @@ Plug 'mitsuhiko/vim-jinja'
 Plug 'mustache/vim-mustache-handlebars'
 Plug 'chrisbra/csv.vim'
 Plug 'kchmck/vim-coffee-script'
+Plug 'shmup/vim-sql-syntax'
 
 call plug#end()
 
@@ -82,6 +79,8 @@ set nojoinspaces
 
 " Save with ,s
 nnoremap <leader>s :update<CR>
+" Save as sudo
+nnoremap <leader>S :w !sudo tee % > /dev/null<CR>
 
 nnoremap \[ :bprev<CR>
 nnoremap \] :bnext<CR>
@@ -150,38 +149,21 @@ autocmd BufWinEnter * if line2byte(line('$') + 1) > 100 * 1024 * 1024 | syntax c
 let g:airline_theme='raven'
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#buffer_idx_mode = 1
-nmap <leader>1 <Plug>AirlineSelectTab1
-nmap <leader>2 <Plug>AirlineSelectTab2
-nmap <leader>3 <Plug>AirlineSelectTab3
-nmap <leader>4 <Plug>AirlineSelectTab4
-nmap <leader>5 <Plug>AirlineSelectTab5
-nmap <leader>6 <Plug>AirlineSelectTab6
-nmap <leader>7 <Plug>AirlineSelectTab7
-nmap <leader>8 <Plug>AirlineSelectTab8
-nmap <leader>9 <Plug>AirlineSelectTab9
 
-if executable('fzf')
-    nnoremap <C-p> :FZF -m<cr>
+for i in range(1, 9)
+    execute "nmap \<leader\>".i." \<Plug\>AirlineSelectTab".i.""
+endfor
 
-    if executable('ag')
-        let $FZF_DEFAULT_COMMAND = 'ag -l --hidden -U -g "" --ignore ".git"'
-    endif
-else
-    set runtimepath^=~/.vim/bundle/ctrlp.vim
-    let g:ctrlp_map = '<c-p>'
-    let g:ctrlp_cmd = 'CtrlP'
-    let g:ctrlp_open_multiple_files = 'i'  " Open multiple files as buffers, not as splits
+nnoremap <C-p> :FZF -m<cr>
 
-    " Use ag over grep
-    if executable('ag')
-        set grepprg=ag\ --nogroup\ --nocolor
-        let g:ctrlp_user_command = 'ag %s -l --nocolor -u -g "" --ignore ".git"'
-        let g:ctrlp_use_caching = 0
-    endif
+if executable('ag')
+    set grepprg=ag\ --nogroup\ --nocolor
+    let $FZF_DEFAULT_COMMAND = 'ag -l --hidden -U -g "" --ignore ".git"'
 endif
 
 let g:ycm_autoclose_preview_window_after_completion = 1
 let g:ycm_autoclose_preview_window_after_insertion = 1
+let g:ycm_python_binary_path = 'python'
 
 let python_highlight_all = 1
 
