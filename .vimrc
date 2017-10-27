@@ -85,7 +85,7 @@ nnoremap <leader>S :w !sudo tee % > /dev/null<CR>
 nnoremap \[ :bprev<CR>
 nnoremap \] :bnext<CR>
 " Close buffer with ,c
-nnoremap <leader>c :bp <BAR> bd #<CR>
+nnoremap <expr> <leader>c len(filter(range(1, bufnr('$')), 'buflisted(v:val)')) == 1 ? ':bd<CR>' : ':bp<CR>:bd #<CR>'
 
 " Easier window navigation
 nmap <C-h> <C-w>h
