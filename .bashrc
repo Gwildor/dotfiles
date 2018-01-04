@@ -11,4 +11,6 @@ export CPPFLAGS=-Qunused-arguments
 
 [[ $- = *i* ]] && bind TAB:menu-complete
 
-source ~/.bash/git-prompt
+[ -f ~/.bash/git-prompt ] && source ~/.bash/git-prompt
+[ -f source ~/.bash/git-completion.bash ] && source ~/.bash/git-completion.bash
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
