@@ -17,6 +17,8 @@ Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-fugitive'
 Plug 'wellle/targets.vim'
 Plug 'justinmk/vim-sneak'
+Plug 'w0rp/ale'
+Plug 'craigemery/vim-autotag'
 
 " Language specific
 Plug 'vim-python/python-syntax'
@@ -76,6 +78,13 @@ set list
 set listchars=tab:│·,trail:·,extends:»,precedes:«,nbsp:·
 let &showbreak='> '
 set nojoinspaces
+set directory=$HOME/.vim/swap
+
+" Persistent Undo
+if has('persistent_undo')
+    set undodir=$HOME/.vim/undodir
+    set undofile
+endif
 
 " Save with ,s
 nnoremap <leader>s :update<CR>
@@ -88,10 +97,10 @@ nnoremap \] :bnext<CR>
 nnoremap <expr> <leader>c len(filter(range(1, bufnr('$')), 'buflisted(v:val)')) == 1 ? ':bd<CR>' : ':bp<CR>:bd #<CR>'
 
 " Easier window navigation
-nmap <C-h> <C-w>h
-nmap <C-j> <C-w>j
-nmap <C-k> <C-w>k
-nmap <C-l> <C-w>l
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
 
 nnoremap Y y$
 
@@ -117,9 +126,6 @@ if $TERM_PROGRAM =~ "iTerm"
     " The VimEnter line causes the random stuff on the command line on enter
     autocmd VimEnter * silent !echo -ne "\033]50;CursorShape=2\a"
     autocmd VimLeave * silent !echo -ne "\033]50;CursorShape=1\a"
-else
-    let &t_SI = "\<Esc>[5 q"
-    let &t_EI = "\<Esc>[1 q"
 endif
 
 " Move lines around
@@ -170,6 +176,8 @@ let python_highlight_all = 1
 let NERDTreeIgnore=['^__pycache__$[[dir]]', '\.pyc$']
 
 let g:sneak#label = 1
+
+let g:airline#extensions#ale#enabled = 1
 
 " Disable rechecking filetype for jinja on html write. This prevents changing
 " htmldjango to htmljinja for Django templates.
