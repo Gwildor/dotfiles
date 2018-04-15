@@ -1,5 +1,3 @@
-"" Plug plugins
-" [PlugInstall] [PlugClean]
 let g:plug_window = 'enew'
 call plug#begin('~/.vim/plugged')
 
@@ -19,6 +17,10 @@ Plug 'wellle/targets.vim'
 Plug 'justinmk/vim-sneak'
 Plug 'w0rp/ale'
 Plug 'craigemery/vim-autotag'
+Plug 'simnalamburt/vim-mundo'
+Plug 'junegunn/goyo.vim'
+Plug 'junegunn/limelight.vim'
+Plug 'reedes/vim-pencil'
 
 " Language specific
 Plug 'vim-python/python-syntax'
@@ -35,12 +37,17 @@ call plug#end()
 
 filetype plugin indent on
 syntax enable
+
+function! s:patch_tnb_colors()
+    " For some reason, inactive line number is barely noticable for Tomorrow-Night-Bright
+    highlight LineNr ctermfg=102
+    highlight link jsonNumber javaScriptNumber
+    highlight link jsonBoolean javaScriptFunction
+    highlight link pythonOperator pythonExClass
+endfunction
+
+autocmd! ColorScheme Tomorrow-Night-Bright call s:patch_tnb_colors()
 colorscheme Tomorrow-Night-Bright
-" For some reason, inactive line number is barely noticable for Tomorrow-Night-Bright
-highlight LineNr ctermfg=102
-highlight link jsonNumber javaScriptNumber
-highlight link jsonBoolean javaScriptFunction
-highlight link pythonOperator pythonExClass
 
 let mapleader=','
 
@@ -62,7 +69,6 @@ set cindent
 set hidden
 set laststatus=2
 set backspace=2
-set colorcolumn=80
 set nostartofline       " Don't go to start of line when moving around, like switching buffers
 set nobackup
 set noswapfile
@@ -78,10 +84,12 @@ set list
 set listchars=tab:│·,trail:·,extends:»,precedes:«,nbsp:·
 let &showbreak='> '
 set nojoinspaces
-set directory=$HOME/.vim/swap
 
 " Persistent Undo
 if has('persistent_undo')
+    if !isdirectory($HOME.'/.vim/undodir')
+        silent call mkdir($HOME.'/.vim/undodir', 'p')
+    endif
     set undodir=$HOME/.vim/undodir
     set undofile
 endif
@@ -95,6 +103,8 @@ nnoremap \[ :bprev<CR>
 nnoremap \] :bnext<CR>
 " Close buffer with ,c
 nnoremap <expr> <leader>c len(filter(range(1, bufnr('$')), 'buflisted(v:val)')) == 1 ? ':bd<CR>' : ':bp<CR>:bd #<CR>'
+" Go to alternative buffer
+nnoremap <bs> <c-^>
 
 " Easier window navigation
 nnoremap <C-h> <C-w>h
@@ -103,8 +113,11 @@ nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 
 nnoremap Y y$
+nnoremap U <C-r>
 
 nnoremap <leader>n :NERDTreeToggle<CR>
+nnoremap <F5> :MundoToggle<CR>
+nnoremap <F11> :Goyo <CR> <bar> :Pencil <CR> <bar> :set showbreak= <CR>
 
 nnoremap <silent><esc> :noh<CR>
 nnoremap <esc>^[ <esc>^[
@@ -139,10 +152,17 @@ vnoremap < <gv
 vnoremap > >gv
 
 " Relative line numbers
-set rnu
+function! s:enable_rnu()
+    if index(['nerdtree', 'Mundo'], &ft) < 0 && getfsize(expand("<afile>")) < 100 * 1024 * 1024 && !get(b:, 'goyo_active', 0)
+        silent! :set relativenumber
+    endif
+endfunction
 nnoremap <silent><leader>l :set rnu! rnu? <cr>
-autocmd InsertEnter,FocusLost,WinLeave,CmdwinLeave * silent! :set norelativenumber
-autocmd InsertLeave,FocusGained,WinEnter,BufEnter,CmdwinEnter * if &ft != 'nerdtree' && getfsize(expand("<afile>")) < 100 * 1024 * 1024 | silent! :set relativenumber | endif
+augroup numbertoggle
+    autocmd!
+    autocmd InsertEnter,FocusLost,WinLeave,CmdwinLeave * silent! :set norelativenumber
+    autocmd InsertLeave,FocusGained,WinEnter,BufEnter,CmdwinEnter * call <SID>enable_rnu()
+augroup END
 
 " Fix escaping insert mode having a delay
 " Also disables listchars in insert mode
@@ -155,6 +175,7 @@ autocmd BufWinEnter * if line2byte(line('$') + 1) > 100 * 1024 * 1024 | syntax c
 let g:airline_theme='raven'
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#buffer_idx_mode = 1
+let g:airline#extensions#ale#enabled = 1
 
 for i in range(1, 9)
     execute "nmap \<leader\>".i." \<Plug\>AirlineSelectTab".i.""
@@ -172,14 +193,23 @@ let g:ycm_autoclose_preview_window_after_insertion = 1
 let g:ycm_python_binary_path = 'python'
 
 let python_highlight_all = 1
+autocmd FileType python setlocal colorcolumn=80
 
 let NERDTreeIgnore=['^__pycache__$[[dir]]', '\.pyc$']
 
 let g:sneak#label = 1
 
-let g:airline#extensions#ale#enabled = 1
+let g:pencil#wrapModeDefault = 'soft'
 
-" Disable rechecking filetype for jinja on html write. This prevents changing
-" htmldjango to htmljinja for Django templates.
-let g:htmljinja_disable_html_upgrade = 1
-autocmd FileType htmldjango setlocal commentstring={#\ %s\ #}
+autocmd BufNewFile,BufReadPost *.md set filetype=markdown
+
+autocmd! User GoyoEnter let b:goyo_active = 1 | setlocal nocursorline scrolloff=999 norelativenumber | Limelight
+
+function! s:goyo_leave()
+    let b:goyo_active = 0
+    setlocal cursorline scrolloff=3
+    call <SID>enable_rnu()
+    Limelight!
+endfunction
+
+autocmd! User GoyoLeave nested call <SID>goyo_leave()
