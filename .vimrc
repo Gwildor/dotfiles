@@ -21,6 +21,7 @@ Plug 'simnalamburt/vim-mundo'
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
 Plug 'reedes/vim-pencil'
+Plug 'morhetz/gruvbox'
 
 " Language specific
 Plug 'vim-python/python-syntax'
@@ -32,22 +33,23 @@ Plug 'mustache/vim-mustache-handlebars'
 Plug 'chrisbra/csv.vim'
 Plug 'kchmck/vim-coffee-script'
 Plug 'shmup/vim-sql-syntax'
+Plug 'hashivim/vim-terraform'
 
 call plug#end()
 
 filetype plugin indent on
 syntax enable
 
-function! s:patch_tnb_colors()
-    " For some reason, inactive line number is barely noticable for Tomorrow-Night-Bright
-    highlight LineNr ctermfg=102
+function! s:patch_colors()
     highlight link jsonNumber javaScriptNumber
     highlight link jsonBoolean javaScriptFunction
     highlight link pythonOperator pythonExClass
 endfunction
 
-autocmd! ColorScheme Tomorrow-Night-Bright call s:patch_tnb_colors()
-colorscheme Tomorrow-Night-Bright
+let g:solarized_termcolors=256
+let g:gruvbox_contrast_dark="hard"
+autocmd! ColorScheme Tomorrow-Night-Bright call s:patch_colors()
+colorscheme gruvbox
 
 let mapleader=','
 
@@ -172,10 +174,11 @@ autocmd InsertLeave * set timeoutlen=1000 list
 " Disable syntax for large files
 autocmd BufWinEnter * if line2byte(line('$') + 1) > 100 * 1024 * 1024 | syntax clear | setlocal nornu nonumber | let b:airline_whitespace_disabled = 1 | endif
 
-let g:airline_theme='raven'
+let g:airline_theme='gruvbox'
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#buffer_idx_mode = 1
 let g:airline#extensions#ale#enabled = 1
+let g:airline_powerline_fonts=1
 
 for i in range(1, 9)
     execute "nmap \<leader\>".i." \<Plug\>AirlineSelectTab".i.""
@@ -195,6 +198,8 @@ let g:ycm_python_binary_path = 'python'
 let python_highlight_all = 1
 autocmd FileType python setlocal colorcolumn=80
 
+autocmd FileType yaml setlocal softtabstop=2 shiftwidth=2
+
 let NERDTreeIgnore=['^__pycache__$[[dir]]', '\.pyc$']
 
 let g:sneak#label = 1
@@ -213,3 +218,7 @@ function! s:goyo_leave()
 endfunction
 
 autocmd! User GoyoLeave nested call <SID>goyo_leave()
+
+let g:pyindent_searchpair_timeout = 100
+
+let g:autotagStartMethod='fork' " https://github.com/craigemery/vim-autotag/issues/34
