@@ -6,7 +6,7 @@ Plug 'vim-airline/vim-airline-themes'
 
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
-Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
+" Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
 
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'scrooloose/nerdtree'
@@ -34,6 +34,8 @@ Plug 'chrisbra/csv.vim'
 Plug 'kchmck/vim-coffee-script'
 Plug 'shmup/vim-sql-syntax'
 Plug 'hashivim/vim-terraform'
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+Plug 'github/copilot.vim'
 
 call plug#end()
 
@@ -49,12 +51,13 @@ endfunction
 let g:solarized_termcolors=256
 let g:gruvbox_contrast_dark="hard"
 autocmd! ColorScheme Tomorrow-Night-Bright call s:patch_colors()
+set background=dark
 colorscheme gruvbox
 
 let mapleader=','
 
 set number
-set tabstop=8
+set tabstop=4
 set softtabstop=4
 set shiftwidth=4
 set expandtab
@@ -196,7 +199,7 @@ let g:ycm_autoclose_preview_window_after_insertion = 1
 let g:ycm_python_binary_path = 'python'
 
 let python_highlight_all = 1
-autocmd FileType python setlocal colorcolumn=80
+autocmd FileType python setlocal colorcolumn=88
 
 autocmd FileType yaml setlocal softtabstop=2 shiftwidth=2
 
@@ -222,3 +225,10 @@ autocmd! User GoyoLeave nested call <SID>goyo_leave()
 let g:pyindent_searchpair_timeout = 100
 
 let g:autotagStartMethod='fork' " https://github.com/craigemery/vim-autotag/issues/34
+
+let g:go_def_mode='gopls'
+let g:go_info_mode='gopls'
+
+let g:ale_linters = {
+  \ 'go': ['gopls'],
+  \}
